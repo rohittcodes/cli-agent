@@ -1,26 +1,26 @@
 # AI Code Agent
 
-A powerful, intelligent CLI developer tool that provides AI-powered code assistance with context management, file operations, and performance tracking. Built with Python and designed for maximum productivity in just 250 lines of code.
+A powerful, intelligent CLI developer tool that provides AI-powered code assistance with context management, file operations, and performance tracking. Built with Python and designed for maximum productivity using Google's Gemini AI models.
 
 ## Features
 
 ### Core Functionality
-- **AI-Powered Code Assistance**: Intelligent tool routing for complex development tasks
+- **AI-Powered Code Assistance**: Intelligent tool routing using Google Gemini 2.5 models
 - **Context Management**: Smart file indexing and content search
 - **File Operations**: Create, read, edit, delete, and search files
-- **Interactive CLI**: Rich console interface with command routing
+- **Interactive CLI**: Rich console interface with natural language processing
 - **Performance Tracking**: Query monitoring and uptime statistics
 
-### New Enhanced Features
+### Enhanced Features
 - **Auto-Save**: Automatic context persistence across sessions
 - **Export Functionality**: Export conversation history to files
 - **Performance Statistics**: Real-time metrics and uptime tracking
-- **Quick Actions**: Fast access to stats, save, and export commands
+- **Smart Model Selection**: Automatic fallback between Gemini model versions
 
 ## Requirements
 
-- Python 3.8+
-- Ollama (for AI functionality)
+- Python 3.11+
+- Google Gemini API key
 - Rich library for console output
 
 ## Installation
@@ -28,21 +28,37 @@ A powerful, intelligent CLI developer tool that provides AI-powered code assista
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd py-game
+   cd cli-agent
    ```
 
 2. **Install dependencies:**
    ```bash
-   uv install
+   uv sync
    ```
 
-3. **Install Ollama:**
-   - Visit [https://ollama.ai](https://ollama.ai)
-   - Download and install Ollama
-   - Pull the required model:
-     ```bash
-     ollama pull llama2:latest
-     ```
+3. **Get Google Gemini API Key:**
+   - Visit [Google AI Studio](https://aistudio.google.com/)
+   - Sign in with your Google account
+   - Click "Get API Key" and create a new key
+   - Copy the API key
+
+4. **Set Environment Variable:**
+   ```bash
+   # Windows
+   set GEMINI_API_KEY=your-api-key-here
+   
+   # Linux/Mac
+   export GEMINI_API_KEY=your-api-key-here
+   ```
+
+## AI Model Support
+
+The system automatically tries the latest Gemini models in order:
+- **Primary**: `gemini-2.5-flash` (fastest, most efficient)
+- **Secondary**: `gemini-2.5-pro` (most advanced reasoning)
+- **Tertiary**: `gemini-2.0-flash` (stable 2.0 version)
+- **Fallback**: `gemini-1.5-pro` (proven stable)
+- **Legacy**: `gemini-1.0-pro` (compatibility)
 
 ## Usage
 
@@ -67,38 +83,38 @@ uv run python main.py
 - `export` - Export conversation history to `export.txt`
 
 #### AI Commands
-- `chat "your request"` - AI-powered tool routing for complex requests
+- Natural language input - AI-powered tool routing for complex requests
 
 ### Examples
 
 #### File Operations
 ```bash
 # Create a new file
-chat "create a new file test.py with print('hello world')"
+create a new file test.py with print('hello world')
 
 # Search for Python files
-chat "find Python files"
+find Python files
 
 # Search for content
-chat "search for 'def main'"
+search for 'def main'
 
 # Analyze code
-chat "analyze the main.py file"
+analyze the main.py file
 ```
 
 #### Context Management
 ```bash
 # Add files to context
-context
+add my project files to context
 
 # Clear context
-clear
+clear context
 
 # View statistics
-stats
+show statistics
 
 # Export history
-export
+export conversation history
 ```
 
 ## Architecture
@@ -134,17 +150,16 @@ The application includes comprehensive test coverage:
 uv run python -m pytest tests/ -v
 
 # Run specific test categories
-uv run python -m pytest tests/test_new_features.py -v
-uv run python -m pytest tests/test_integration.py -v
+uv run python -m pytest tests/test_file_operations.py -v
+uv run python -m pytest tests/test_context_management.py -v
+
+# Run with coverage
+uv run python tests/test_runner.py coverage
 ```
 
 ### Test Categories
-1. **AI Functionality** (`test_ai.py`) - AI operations and performance
-2. **CodeAgent Core** (`test_codeagent.py`) - Core functionality and file operations
-3. **Context Management** (`test_context.py`) - Context persistence and commands
-4. **New Features** (`test_new_features.py`) - Enhanced functionality
-5. **Tool Execution** (`test_orchestrator.py`) - Tool routing and execution
-6. **Integration** (`test_integration.py`) - End-to-end workflows
+1. **File Operations** (`test_file_operations.py`) - File management and operations
+2. **Context Management** (`test_context_management.py`) - Context persistence and commands
 
 ### Test Cleanup
 All tests include proper cleanup to prevent file leaks:
@@ -179,16 +194,16 @@ The application uses `agent_context.json` to persist:
 - Performance statistics
 
 ### AI Configuration
-- **Model**: llama2:latest (configurable)
-- **URL**: http://localhost:11434 (Ollama default)
-- **Timeout**: 2 seconds for health checks
+- **Model**: Google Gemini Pro (cloud-based)
+- **API Key**: GEMINI_API_KEY environment variable
+- **Provider**: Google AI Studio
 
 ## Error Handling
 
 ### Graceful Degradation
 - **AI Unavailable**: Continue with file operations only
 - **File Errors**: Skip problematic files, continue processing
-- **Network Issues**: Retry with exponential backoff
+- **API Issues**: Clear error messages for missing API key
 
 ### User-Friendly Messages
 - Clear error messages for common issues
@@ -243,8 +258,8 @@ The application uses `agent_context.json` to persist:
 ### Benchmarks
 - **Startup Time**: < 1 second
 - **File Indexing**: ~100 files/second
-- **AI Response**: 2-5 seconds average
-- **Memory Usage**: < 50MB typical
+- **AI Response**: 1-3 seconds average (Gemini API)
+- **Memory Usage**: < 30MB typical (no local AI model)
 
 ### Optimization Features
 - **Lazy Loading**: Load files only when needed

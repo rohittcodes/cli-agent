@@ -25,3 +25,4 @@ ENV/
 Thumbs.db
 
 agent_context.json
+session.json

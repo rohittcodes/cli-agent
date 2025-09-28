@@ -3,15 +3,15 @@
 ## Architecture Overview
 
 ### System Design
-The AI Code Agent is built as a single-class application (`CodeAgent`) that consolidates all functionality into 250 lines of highly optimized Python code. The architecture follows a modular design pattern with integrated components.
+The AI Code Agent is built as a single-class application (`AICodeAgent`) that consolidates all functionality into optimized Python code. The architecture follows a modular design pattern with integrated components using Google's Gemini AI models.
 
 ### Core Architecture
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    CodeAgent Class                          │
+│                    AICodeAgent Class                        │
 ├─────────────────────────────────────────────────────────────┤
 │  • Context Management (files, history)                      │
-│  • AI Integration (Ollama API)                              │
+│  • AI Integration (Google Gemini 2.5 API)                  │
 │  • File Operations (CRUD, search, indexing)                 │
 │  • Performance Tracking (stats, uptime, queries)            │
 │  • Tool Execution (routing, validation)                     │
@@ -201,7 +201,7 @@ except Exception:
 ## 🔧 Configuration Management
 
 ### Environment Variables
-- **OLLAMA_URL**: AI service endpoint (default: http://localhost:11434)
+- **GEMINI_API_KEY**: Google Gemini API key (required)
 - **CACHE_SIZE**: LRU cache size (default: 1000)
 - **SCAN_INTERVAL**: File re-scan interval (default: 5 seconds)
 
@@ -291,7 +291,7 @@ def __init__(self):
 
 ### Dependencies
 - **Core**: Python standard library
-- **AI**: Ollama service
+- **AI**: Google Gemini API
 - **UI**: Rich library
 - **Testing**: pytest, unittest
 

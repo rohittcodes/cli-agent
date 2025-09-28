@@ -3,8 +3,8 @@
 ## Getting Started
 
 ### Quick Start
-1. **Install Ollama**: Visit [https://ollama.ai](https://ollama.ai) and install Ollama
-2. **Pull AI Model**: Run `ollama pull llama2:latest`
+1. **Get Gemini API Key**: Visit [Google AI Studio](https://aistudio.google.com/) and get your API key
+2. **Set Environment Variable**: `export GEMINI_API_KEY=your-api-key-here`
 3. **Start the Agent**: Run `uv run python main.py`
 4. **Start Coding**: Type `help` to see available commands
 
@@ -20,7 +20,7 @@ help
 context
 
 # Ask AI for help
-chat "analyze my code structure"
+analyze my code structure
 ```
 
 ---
@@ -66,21 +66,21 @@ AI> exit
 ## AI Commands
 
 ### Chat with AI
-Use `chat "your request"` to interact with the AI assistant.
+Use natural language to interact with the AI assistant.
 
 **Examples**:
 ```bash
 # Analyze code
-AI> chat "analyze the main.py file"
+AI> analyze the main.py file
 
 # Create new files
-AI> chat "create a new file test.py with a hello world function"
+AI> create a new file test.py with a hello world function
 
 # Search for content
-AI> chat "search for all functions that start with 'def'"
+AI> search for all functions that start with 'def'
 
 # Get help with debugging
-AI> chat "help me debug this error in my code"
+AI> help me debug this error in my code
 ```
 
 ### AI Capabilities
@@ -100,39 +100,39 @@ AI> chat "help me debug this error in my code"
 #### Add Individual Files
 ```bash
 # The agent will automatically add files when you reference them
-AI> chat "analyze main.py"
+AI> analyze main.py
 ```
 
 #### Add Directories
 ```bash
 # Add entire directories to context
-AI> chat "add all Python files in src/ directory"
+AI> add all Python files in src/ directory
 ```
 
 ### File Operations
 
 #### Create Files
 ```bash
-AI> chat "create a new file utils.py with helper functions"
-AI> chat "create a config.json file with database settings"
+AI> create a new file utils.py with helper functions
+AI> create a config.json file with database settings
 ```
 
 #### Read Files
 ```bash
-AI> chat "show me the content of main.py"
-AI> chat "read the README.md file"
+AI> show me the content of main.py
+AI> read the README.md file
 ```
 
 #### Search Files
 ```bash
-AI> chat "find all Python files"
-AI> chat "search for files containing 'database'"
+AI> find all Python files
+AI> search for files containing 'database'
 ```
 
 #### Search Content
 ```bash
-AI> chat "search for all functions named 'main'"
-AI> chat "find all imports in the codebase"
+AI> search for all functions named 'main'
+AI> find all imports in the codebase
 ```
 
 ---
@@ -186,42 +186,42 @@ AI> history
 ### 1. Project Analysis
 ```bash
 # Start with your project
-AI> chat "analyze the structure of my project"
+AI> analyze the structure of my project
 
 # Get specific insights
-AI> chat "find all the main functions in my code"
-AI> chat "identify potential issues in my code"
+AI> find all the main functions in my code
+AI> identify potential issues in my code
 ```
 
 ### 2. Code Generation
 ```bash
 # Create new files
-AI> chat "create a new API endpoint for user authentication"
-AI> chat "generate a test file for my main functions"
-AI> chat "create a configuration file for my application"
+AI> create a new API endpoint for user authentication
+AI> generate a test file for my main functions
+AI> create a configuration file for my application
 ```
 
 ### 3. Debugging
 ```bash
 # Get help with errors
-AI> chat "help me fix this error: 'NameError: name 'x' is not defined'"
-AI> chat "debug this function that's not working correctly"
+AI> help me fix this error: 'NameError: name 'x' is not defined'
+AI> debug this function that's not working correctly
 ```
 
 ### 4. Code Review
 ```bash
 # Review your code
-AI> chat "review this code for best practices"
-AI> chat "suggest improvements for this function"
-AI> chat "check for security issues in my code"
+AI> review this code for best practices
+AI> suggest improvements for this function
+AI> check for security issues in my code
 ```
 
 ### 5. Documentation
 ```bash
 # Generate documentation
-AI> chat "create documentation for my API"
-AI> chat "generate comments for this complex function"
-AI> chat "create a README for my project"
+AI> create documentation for my API
+AI> generate comments for this complex function
+AI> create a README for my project
 ```
 
 ---
@@ -233,26 +233,26 @@ AI> chat "create a README for my project"
 #### Be Specific
 ```bash
 # Good: Specific request
-AI> chat "create a function that calculates fibonacci numbers with memoization"
+AI> create a function that calculates fibonacci numbers with memoization
 
 # Less effective: Vague request
-AI> chat "help me with math"
+AI> help me with math
 ```
 
 #### Provide Context
 ```bash
 # Good: With context
-AI> chat "analyze the authentication system in my Flask app"
+AI> analyze the authentication system in my Flask app
 
 # Less effective: Without context
-AI> chat "analyze authentication"
+AI> analyze authentication
 ```
 
 #### Use Follow-up Questions
 ```bash
-AI> chat "create a user model"
-AI> chat "now add validation to that model"
-AI> chat "create tests for the validation"
+AI> create a user model
+AI> now add validation to that model
+AI> create tests for the validation
 ```
 
 ### File Management Tips
@@ -287,18 +287,18 @@ AI> chat "create tests for the validation"
 
 #### AI Not Responding
 ```bash
-# Check if Ollama is running
+# Check if Gemini API key is set
 AI> stats
-# If no AI available, you can still use file operations
+# If no AI available, check your GEMINI_API_KEY environment variable
 ```
 
 #### Files Not Found
 ```bash
 # Check your context
-AI> context
+AI> show context
 
 # Add files to context
-AI> chat "add main.py to context"
+AI> add main.py to context
 ```
 
 #### Slow Performance
@@ -313,13 +313,13 @@ AI> clear
 ### Error Messages
 
 #### "AI not detected"
-- Install Ollama: [https://ollama.ai](https://ollama.ai)
-- Pull the model: `ollama pull llama2:latest`
+- Get Gemini API key: [Google AI Studio](https://aistudio.google.com/)
+- Set environment variable: `export GEMINI_API_KEY=your-api-key-here`
 - Restart the agent
 
 #### "No files in context"
-- Add files: `AI> chat "add my project files"`
-- Check context: `AI> context`
+- Add files: `AI> add my project files`
+- Check context: `AI> show context`
 
 #### "Invalid selection"
 - Use valid file numbers
@@ -334,37 +334,37 @@ AI> clear
 #### Project Setup
 ```bash
 # 1. Add project to context
-AI> chat "add all files in my project directory"
+AI> add all files in my project directory
 
 # 2. Analyze structure
-AI> chat "analyze my project structure and suggest improvements"
+AI> analyze my project structure and suggest improvements
 
 # 3. Generate missing files
-AI> chat "create any missing configuration files"
+AI> create any missing configuration files
 ```
 
 #### Code Review Process
 ```bash
 # 1. Add code to context
-AI> chat "add the files I want reviewed"
+AI> add the files I want reviewed
 
 # 2. Get comprehensive review
-AI> chat "review this code for bugs, performance, and best practices"
+AI> review this code for bugs, performance, and best practices
 
 # 3. Address issues
-AI> chat "help me fix the issues you found"
+AI> help me fix the issues you found
 ```
 
 #### Documentation Generation
 ```bash
 # 1. Add source files
-AI> chat "add my source code files"
+AI> add my source code files
 
 # 2. Generate documentation
-AI> chat "create comprehensive documentation for my API"
+AI> create comprehensive documentation for my API
 
 # 3. Export results
-AI> export
+AI> export conversation history
 ```
 
 ### Integration with Development Tools
@@ -372,19 +372,19 @@ AI> export
 #### Git Integration
 ```bash
 # Analyze changes
-AI> chat "analyze the changes in my git diff"
+AI> analyze the changes in my git diff
 
 # Generate commit messages
-AI> chat "generate a commit message for my changes"
+AI> generate a commit message for my changes
 ```
 
 #### Testing
 ```bash
 # Generate tests
-AI> chat "create unit tests for my functions"
+AI> create unit tests for my functions
 
 # Analyze test coverage
-AI> chat "analyze my test coverage and suggest improvements"
+AI> analyze my test coverage and suggest improvements
 ```
 
 ---
@@ -394,39 +394,39 @@ AI> chat "analyze my test coverage and suggest improvements"
 ### Example 1: Web Application
 ```bash
 # Start with project analysis
-AI> chat "analyze my Flask web application"
+AI> analyze my Flask web application
 
 # Get specific insights
-AI> chat "find all the routes in my application"
-AI> chat "identify security issues in my code"
+AI> find all the routes in my application
+AI> identify security issues in my code
 
 # Generate improvements
-AI> chat "create a better error handling system"
-AI> chat "add input validation to my forms"
+AI> create a better error handling system
+AI> add input validation to my forms
 ```
 
 ### Example 2: Data Analysis
 ```bash
 # Analyze data processing code
-AI> chat "review my data analysis pipeline"
+AI> review my data analysis pipeline
 
 # Optimize performance
-AI> chat "suggest optimizations for my data processing"
+AI> suggest optimizations for my data processing
 
 # Generate visualizations
-AI> chat "create code for data visualization"
+AI> create code for data visualization
 ```
 
 ### Example 3: API Development
 ```bash
 # Design API structure
-AI> chat "design a REST API for my application"
+AI> design a REST API for my application
 
 # Implement endpoints
-AI> chat "create the user authentication endpoints"
+AI> create the user authentication endpoints
 
 # Add documentation
-AI> chat "generate API documentation"
+AI> generate API documentation
 ```
 
 ---
@@ -443,4 +443,4 @@ The AI Code Agent is a powerful tool that can significantly enhance your develop
 
 Remember to experiment with different commands and workflows to find what works best for your specific needs. The AI is designed to be helpful and responsive, so don't hesitate to ask questions or request assistance with your coding tasks.
 
-Happy coding! 🚀
+Happy coding!
