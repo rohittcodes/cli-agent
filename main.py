@@ -2,7 +2,7 @@
 import json, requests, os, time, threading, re
 from functools import lru_cache
 from collections import defaultdict
-from typing import Dict, List, Set
+from typing import List
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt, Confirm
@@ -59,7 +59,8 @@ class CodeAgent:
             if 'response' in data:
                 chunk = data['response']; response += chunk; chunk_count += 1
                 if chunk_count == 1: console.print("\r" + " " * 50 + "\r", end="")
-                print(chunk, end="", flush=True); time.sleep(0.02) if chunk_count % 3 == 0 else None
+                print(chunk, end="", flush=True)
+                if chunk_count % 3 == 0: time.sleep(0.02)
             elif not data.get('done', False) and chunk_count == 0:
                 thinking_idx = (thinking_idx + 1) % len(thinking_chars)
                 print(f"\r[dim]{thinking_chars[thinking_idx]} AI is thinking...[/dim]", end="", flush=True); time.sleep(0.1)
@@ -142,10 +143,8 @@ class CodeAgent:
         except: return "Error removing files"
     def _auto_save(self): 
         with open(self.file, 'w') as f: json.dump(self.context, f)
-    
     def _get_stats(self):
-        total_lines = sum(len(self.get_file_content(f).split('\n')) for f in self.context['files'])
-        uptime = time.time() - self.performance_stats['start_time']
+        total_lines = sum(len(self.get_file_content(f).split('\n')) for f in self.context['files']); uptime = time.time() - self.performance_stats['start_time']
         return f"[dim]Stats: {len(self.context['files'])} files, {total_lines} lines, {len(self.context['history'])} history, {self.performance_stats['queries']} queries, {uptime:.1f}s uptime[/dim]"
     def _smart_route_command(self, user_input):
         if (user_input.startswith('chat "') and user_input.endswith('"')) or (user_input.startswith("chat '") and user_input.endswith("'")):
@@ -163,7 +162,6 @@ class CodeAgent:
         }
         result = commands.get(user_input.lower())
         return result() if result else (console.print("[yellow]Unknown command. Use 'help' for commands or 'chat \"your request\"' for AI assistance.[/yellow]"), "Unknown command")[1]
-    
     def _ai_tool_route_command(self, user_input):
         self.performance_stats['queries'] += 1
         tools_description = """TOOLS: 1. create_file(filename, content) 2. read_file(filename) 3. edit_file(filename, content) 4. delete_file(filename) 5. search_files(query) 6. search_content(query) 7. list_directory(path) 8. add_to_context(files) 9. remove_from_context(files) 10. clear_context() 11. show_context() 12. analyze_code(files) 13. show_help() 14. show_history() 15. exit_program()"""
