@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-import json, os, time, re, logging, warnings, sys
+import json, os, time, logging, warnings, sys
 from functools import lru_cache
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-# Completely suppress all warnings and logs
+# Suppress warnings and logs
 warnings.filterwarnings("ignore")
 logging.disable(logging.CRITICAL)
-os.environ['GRPC_VERBOSITY'] = 'NONE'
-os.environ['GLOG_minloglevel'] = '3'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ.update({'GRPC_VERBOSITY': 'NONE', 'GLOG_minloglevel': '3', 'TF_CPP_MIN_LOG_LEVEL': '3'})
 sys.stderr = open(os.devnull, 'w') if os.name != 'nt' else sys.stderr
 
 try:
@@ -36,24 +34,20 @@ class AICodeAgent:
         self._load_session()
         
     def _load_session(self):
-        try:
-            with open('session.json', 'r') as f: self.context.update(json.load(f))
+        try: data = json.load(open('session.json', 'r')); self.context.update(data); self.context['files'] = self.context.get('files') or []
         except: pass
         
     def _save_session(self):
-        try:
-            with open('session.json', 'w') as f: json.dump(self.context, f)
+        try: json.dump(self.context, open('session.json', 'w'))
         except: pass
         
     def _read_file(self, path):
-        try:
-            with open(path, 'r', encoding='utf-8') as f: return f.read()
+        try: return open(path, 'r', encoding='utf-8').read()
         except: return ""
-    
     def _write_file(self, path, content):
         try:
             os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
-            with open(path, 'w', encoding='utf-8') as f: f.write(content)
+            open(path, 'w', encoding='utf-8').write(content)
             return True
         except Exception as e:
             console.print(f"[red]File write error: {e}[/red]")
@@ -61,14 +55,10 @@ class AICodeAgent:
         
     @lru_cache(maxsize=1)
     def _ai_available(self): return self.model is not None
-        
     def _stream_ai(self, prompt):
         if not self._ai_available(): return None
-        try:
-            response = self.model.generate_content(prompt)
-            return response.text.strip() if response.text else None
+        try: return self.model.generate_content(prompt).text.strip() or None
         except: return None
-            
     def _find_files(self, pattern=""):
         found = []
         for root, dirs, files in os.walk('.'):
@@ -76,8 +66,9 @@ class AICodeAgent:
             for f in files:
                 if not f.startswith('.') and not f.endswith(('.pyc', '.log')):
                     path = os.path.join(root, f).replace('\\', '/')
-                    if not pattern or pattern.lower() in f.lower() or pattern.lower() in path.lower(): found.append(path)
-                    if len(found) >= 20: return found
+                    if not pattern or pattern.lower() in f.lower() or pattern.lower() in path.lower(): 
+                        found.append(path)
+                        if len(found) >= 20: return found
         return found
         
     def _search_in_files(self, query):
@@ -102,15 +93,11 @@ class AICodeAgent:
             'server': 'from http.server import HTTPServer, BaseHTTPRequestHandler\nimport json\nimport urllib.parse as urlparse\n\nclass APIHandler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        """Handle GET requests"""\n        path = self.path\n        if path == "/":\n            self.send_response(200)\n            self.send_header("Content-type", "text/html")\n            self.end_headers()\n            self.wfile.write(b"<h1>Python HTTP Server</h1><p>Server is running!</p>")\n        elif path == "/api/status":\n            self.send_json_response({"status": "running", "message": "Server is healthy"})\n        elif path.startswith("/api/echo"):\n            query = urlparse.urlparse(path).query\n            params = urlparse.parse_qs(query)\n            self.send_json_response({"echo": params})\n        else:\n            self.send_error(404, "Not Found")\n    \n    def do_POST(self):\n        """Handle POST requests"""\n        content_length = int(self.headers.get("Content-Length", 0))\n        post_data = self.rfile.read(content_length).decode("utf-8")\n        try:\n            data = json.loads(post_data) if post_data else {}\n            self.send_json_response({"received": data, "method": "POST"})\n        except:\n            self.send_error(400, "Invalid JSON")\n    \n    def send_json_response(self, data):\n        """Send JSON response"""\n        self.send_response(200)\n        self.send_header("Content-type", "application/json")\n        self.send_header("Access-Control-Allow-Origin", "*")\n        self.end_headers()\n        self.wfile.write(json.dumps(data).encode())\n    \n    def log_message(self, format, *args):\n        """Suppress default logging"""\n        pass\n\ndef start_server(port=8000):\n    """Start the HTTP server"""\n    try:\n        server = HTTPServer(("localhost", port), APIHandler)\n        print(f"Server running at http://localhost:{port}")\n        print("Available endpoints:")\n        print(f"  GET  http://localhost:{port}/")\n        print(f"  GET  http://localhost:{port}/api/status")\n        print(f"  GET  http://localhost:{port}/api/echo?param=value")\n        print(f"  POST http://localhost:{port}/api/data")\n        print("Press Ctrl+C to stop")\n        server.serve_forever()\n    except KeyboardInterrupt:\n        print("\\nServer stopped")\n    except Exception as e:\n        print(f"Server error: {e}")\n\nif __name__ == "__main__":\n    start_server()'
         }
         
-        # Match template by keywords in filename/request
-        name_lower = name.lower()
         for key, template in templates.items():
-            if key in name_lower: return template
-        
-        # Default template based on file extension
+            if key in name.lower(): return template
         if name.endswith('.py'):
-            return f'#!/usr/bin/env python3\n# {name}\n# Generated by AI Code Agent\n\ndef main():\n    """Main function"""\n    print("Hello from {name}!")\n    # Add your code here\n    pass\n\nif __name__ == "__main__":\n    main()'
-        return f'# {name.title()}\n# Generated by AI Code Agent\nprint("File created successfully!")'
+            return f'#!/usr/bin/env python3\n# {name}\n\ndef main():\n    print("Hello from {name}!")\n    pass\n\nif __name__ == "__main__":\n    main()'
+        return f'# {name.title()}\nprint("File created successfully!")'
         
     def _execute_tool(self, tool, params):
         try:
@@ -118,7 +105,6 @@ class AICodeAgent:
                 name = params.get('filename') or params.get('name') or params.get('file') or 'script.py'
                 content = params.get('content') or self._get_code_templates(name)
                 
-                # Clean up content if it has JSON artifacts
                 if content.startswith('{"') and content.endswith('}'):
                     content = self._get_code_templates(name)
                 
@@ -126,13 +112,13 @@ class AICodeAgent:
                     if name not in self.context['files']: self.context['files'].append(name)
                     console.print(f"[green]✓ Created {name} ({len(content)} chars)[/green]")
                     return f"Successfully created {name} with {len(content)} characters"
-                return "Failed to create file - check permissions"
+                return "Failed to create file"
                 
             elif tool == "read_file":
                 name = params.get('filename') or params.get('name') or params.get('file', '')
                 content = self._read_file(name)
                 if content: return f"=== {name} ({len(content)} chars) ===\n{content[:800]}{'...' if len(content) > 800 else ''}"
-                return "File not found or empty"
+                return "File not found"
                 
             elif tool == "search_files":
                 query = params.get('query', '')
@@ -140,7 +126,6 @@ class AICodeAgent:
                 if 'python' in query.lower(): query = '.py'
                 elif 'javascript' in query.lower(): query = '.js'
                 elif 'html' in query.lower(): query = '.html'
-                elif 'download' in query.lower(): query = 'download'
                 
                 files = self._find_files(query)
                 if files:
@@ -149,13 +134,13 @@ class AICodeAgent:
                     result = f"Found {len(files)} files:\n" + '\n'.join(f"  • {f}" for f in files[:10])
                     if len(files) > 10: result += f"\n  ... and {len(files) - 10} more"
                     return result
-                return f"No files found matching: {query}"
+                return f"No files found: {query}"
                 
             elif tool == "search_content":
                 query = params.get('query', '')
                 matches = self._search_in_files(query)
                 if matches: return f"Found {len(matches)} matches:\n" + '\n'.join(f"  {os.path.basename(path)}:{line} - {content}" for path, line, content in matches[:8])
-                return "No matches found in context files"
+                return "No matches found"
                 
             elif tool == "show_context":
                 if not self.context['files']: return "No files in context"
@@ -171,9 +156,9 @@ class AICodeAgent:
                 if not content: return "No files to analyze"
                 
                 if self._ai_available():
-                    analysis = self._stream_ai(f"Analyze this code and provide brief insights about functionality, potential issues, and improvements:\n\n{content}")
-                    return analysis or "Code analysis completed - basic structure looks good"
-                return f"Code analysis (AI unavailable):\nFound {len(files)} files with total {len(content)} characters of code"
+                    analysis = self._stream_ai(f"Analyze this code:\n\n{content}")
+                    return analysis or "Code analysis completed"
+                return f"Found {len(files)} files with {len(content)} characters"
                 
             elif tool == "list_directory":
                 directory = params.get('directory', '.')
@@ -182,8 +167,8 @@ class AICodeAgent:
                     dirs = [i for i in items if os.path.isdir(os.path.join(directory, i))][:8]
                     files = [i for i in items if os.path.isfile(os.path.join(directory, i))][:12]
                     result = f"Directory: {os.path.abspath(directory)}\n"
-                    if dirs: result += f"Folders ({len(dirs)}): {', '.join(dirs)}\n"
-                    if files: result += f"Files ({len(files)}): {', '.join(files)}"
+                    if dirs: result += f"Folders: {', '.join(dirs)}\n"
+                    if files: result += f"Files: {', '.join(files)}"
                     return result
                 except: return "Cannot access directory"
                 
@@ -202,19 +187,15 @@ class AICodeAgent:
                 
             elif tool == "show_stats":
                 uptime = int(time.time() - self.stats['start_time'])
-                return f"Agent Stats:\n• Files in context: {len(self.context['files'])}\n• Queries processed: {self.stats['queries']}\n• Uptime: {uptime}s\n• AI available: {'Yes' if self._ai_available() else 'No'}"
+                return f"Agent Stats:\n• Files: {len(self.context['files'])}\n• Queries: {self.stats['queries']}\n• Uptime: {uptime}s\n• AI: {'Yes' if self._ai_available() else 'No'}"
                 
             else: return f"Unknown tool: {tool}"
         except Exception as e: return f"Tool execution error: {str(e)}"
-            
     def _simple_parse_request(self, user_input):
-        """Simple rule-based request parsing when AI is unavailable"""
         input_lower = user_input.lower()
         
-        # File creation patterns
         if any(word in input_lower for word in ['create', 'make', 'build', 'generate']):
-            if 'download' in input_lower or 'url' in input_lower:
-                return {"response": "Creating file downloader", "actions": [{"tool": "create_file", "params": {"filename": "file_downloader.py", "content": ""}}]}
+            if 'download' in input_lower or 'url' in input_lower: return {"response": "Creating file downloader", "actions": [{"tool": "create_file", "params": {"filename": "file_downloader.py", "content": ""}}]}
             elif 'scraper' in input_lower or 'scrape' in input_lower:
                 return {"response": "Creating web scraper", "actions": [{"tool": "create_file", "params": {"filename": "web_scraper.py", "content": ""}}]}
             elif 'calculator' in input_lower or 'calc' in input_lower:
@@ -224,52 +205,42 @@ class AICodeAgent:
             else:
                 return {"response": "Creating Python script", "actions": [{"tool": "create_file", "params": {"filename": "script.py", "content": ""}}]}
         
-        # File operations
         elif 'read' in input_lower or 'show' in input_lower:
             if 'context' in input_lower: return {"response": "Showing context", "actions": [{"tool": "show_context", "params": {}}]}
             elif 'stats' in input_lower: return {"response": "Showing statistics", "actions": [{"tool": "show_stats", "params": {}}]}
             elif 'directory' in input_lower or 'folder' in input_lower: return {"response": "Listing directory", "actions": [{"tool": "list_directory", "params": {}}]}
         
-        # Search operations
         elif 'find' in input_lower or 'search' in input_lower:
             if 'python' in input_lower: return {"response": "Finding Python files", "actions": [{"tool": "search_files", "params": {"query": ".py"}}]}
             elif 'javascript' in input_lower: return {"response": "Finding JavaScript files", "actions": [{"tool": "search_files", "params": {"query": ".js"}}]}
             elif 'files' in input_lower: return {"response": "Finding files", "actions": [{"tool": "search_files", "params": {"query": ""}}]}
         
-        # Analysis
         elif 'analyze' in input_lower or 'review' in input_lower:
             return {"response": "Analyzing code", "actions": [{"tool": "analyze_code", "params": {}}]}
         
-        # Default fallback
         return {"response": "Processing request", "actions": [{"tool": "list_directory", "params": {}}]}
             
     def _process_request(self, user_input):
         if user_input.lower().strip() in ['exit', 'quit', 'q']: return "exit"
         self.stats['queries'] += 1
         
-        # Try AI first if available
         if self._ai_available():
             prompt = f'Parse this request into JSON format with response message and tool actions. ONLY return valid JSON, no extra text or markdown:\n\nUSER: "{user_input}"\n\nTOOLS: create_file, read_file, search_files, search_content, analyze_code, show_context, list_directory, add_context, clear_context, show_stats\n\nJSON FORMAT:\n{{"response": "brief message", "actions": [{{"tool": "tool_name", "params": {{"key": "value"}}}}]}}\n\nUSER REQUEST: {user_input}'
             
             ai_response = self._stream_ai(prompt)
             if ai_response:
                 try:
-                    # Clean up response
                     cleaned = ai_response.strip()
                     if cleaned.startswith('```json'): cleaned = cleaned[7:]
                     if cleaned.endswith('```'): cleaned = cleaned[:-3]
                     cleaned = cleaned.strip()
                     
-                    # Find JSON object
                     start = cleaned.find('{')
                     end = cleaned.rfind('}') + 1
                     if start >= 0 and end > start:
                         json_str = cleaned[start:end]
                         data = json.loads(json_str)
-                        if isinstance(data.get('actions'), list):
-                            # Use AI parsed result
-                            pass
-                        else:
+                        if not isinstance(data.get('actions'), list):
                             data = self._simple_parse_request(user_input)
                     else:
                         data = self._simple_parse_request(user_input)
@@ -303,7 +274,6 @@ class AICodeAgent:
     def run(self):
         console.print(Panel("AI CODE AGENT v2.1\nIntelligent coding assistant with natural language interface\nFixed warnings and improved file creation", title="Welcome", style="bold cyan"))
         console.print("[dim]Examples: 'create file downloader', 'make web scraper', 'build calculator', 'show files'[/dim]")
-        
         if not self._ai_available(): console.print("[yellow]AI mode unavailable - using rule-based parsing (set GEMINI_API_KEY for full features)[/yellow]")
         self._show_status()
         
