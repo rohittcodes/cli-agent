@@ -46,10 +46,8 @@ class TestIntegration(unittest.TestCase):
                 test_file1 = os.path.join(temp_dir, "test1.py")
                 test_file2 = os.path.join(temp_dir, "test2.py")
                 
-                with open(test_file1, 'w') as f:
-                    f.write("print('hello')")
-                with open(test_file2, 'w') as f:
-                    f.write("print('world')")
+                with open(test_file1, 'w') as f: f.write("print('hello')")
+                with open(test_file2, 'w') as f: f.write("print('world')")
                 
                 # Add files to context
                 test_agent.add_context([test_file1, test_file2])
@@ -73,8 +71,7 @@ class TestIntegration(unittest.TestCase):
         """Test AI task execution workflow"""
         with tempfile.TemporaryDirectory() as temp_dir:
             test_file = os.path.join(temp_dir, "test.py")
-            with open(test_file, 'w') as f:
-                f.write("def hello(): pass")
+            with open(test_file, 'w') as f: f.write("def hello(): pass")
             
             self.agent.add_context([test_file])
             
@@ -99,8 +96,7 @@ class TestIntegration(unittest.TestCase):
             
             for filename in files_to_create:
                 filepath = os.path.join(temp_dir, filename)
-                with open(filepath, 'w') as f:
-                    f.write(f"# {filename}")
+                with open(filepath, 'w') as f: f.write(f"# {filename}")
             
             # Test different file operations
             context_files = self.agent.list_files("", interactive=False, title="Context Files")
