@@ -5,24 +5,18 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-# Suppress warnings and logs
-warnings.filterwarnings("ignore")
-logging.disable(logging.CRITICAL)
-os.environ.update({'GRPC_VERBOSITY': 'NONE', 'GLOG_minloglevel': '3', 'TF_CPP_MIN_LOG_LEVEL': '3'})
-sys.stderr = open(os.devnull, 'w') if os.name != 'nt' else sys.stderr
-
+warnings.filterwarnings("ignore"); logging.disable(logging.CRITICAL)
 try:
     import google.generativeai as genai
-    GENAI_AVAILABLE = True
-except:
-    GENAI_AVAILABLE = False
+except ImportError:
+    genai = None
 
-console = Console(force_terminal=True, width=120)
+console = Console(width=120)
 
 class AICodeAgent:
     def __init__(self):
         self.model = None
-        if GENAI_AVAILABLE:
+        if genai:
             api_key = os.getenv('GEMINI_API_KEY', '')
             if api_key and api_key != 'your-api-key-here':
                 try:
@@ -34,7 +28,11 @@ class AICodeAgent:
         self._load_session()
         
     def _load_session(self):
-        try: data = json.load(open('session.json', 'r')); self.context.update(data); self.context['files'] = self.context.get('files') or []
+        try: 
+            data = json.load(open('session.json', 'r'))
+            self.context.update(data)
+            if not isinstance(self.context.get('files'), list): self.context['files'] = []
+            if not isinstance(self.context.get('history'), list): self.context['history'] = []
         except: pass
         
     def _save_session(self):
@@ -46,12 +44,9 @@ class AICodeAgent:
         except: return ""
     def _write_file(self, path, content):
         try:
-            os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
-            open(path, 'w', encoding='utf-8').write(content)
-            return True
+            os.makedirs(os.path.dirname(path) or '.', exist_ok=True); open(path, 'w', encoding='utf-8').write(content); return True
         except Exception as e:
-            console.print(f"[red]File write error: {e}[/red]")
-            return False
+            console.print(f"[red]File write error: {e}[/red]"); return False
         
     @lru_cache(maxsize=1)
     def _ai_available(self): return self.model is not None
@@ -100,6 +95,8 @@ class AICodeAgent:
         return f'# {name.title()}\nprint("File created successfully!")'
         
     def _execute_tool(self, tool, params):
+        if not isinstance(self.context.get('files'), list): self.context['files'] = []
+        if not isinstance(self.context.get('history'), list): self.context['history'] = []
         try:
             if tool == "create_file":
                 name = params.get('filename') or params.get('name') or params.get('file') or 'script.py'
@@ -267,6 +264,8 @@ class AICodeAgent:
         return '\n\n'.join(results) if results else "Request processed"
         
     def _show_status(self):
+        # Ensure files is a list before using
+        if not isinstance(self.context.get('files'), list): self.context['files'] = []
         ctx = f"[green]{len(self.context['files'])} files[/green]" if self.context['files'] else "[dim]No files[/dim]"
         if self.stats['queries'] > 0: ctx += f" [dim]| 🔍 {self.stats['queries']} queries[/dim]"
         console.print(ctx)
@@ -274,7 +273,7 @@ class AICodeAgent:
     def run(self):
         console.print(Panel("AI CODE AGENT v2.1\nIntelligent coding assistant with natural language interface\nFixed warnings and improved file creation", title="Welcome", style="bold cyan"))
         console.print("[dim]Examples: 'create file downloader', 'make web scraper', 'build calculator', 'show files'[/dim]")
-        if not self._ai_available(): console.print("[yellow]AI mode unavailable - using rule-based parsing (set GEMINI_API_KEY for full features)[/yellow]")
+        if not self._ai_available(): console.print("[yellow]AI mode unavailable - set GEMINI_API_KEY for full features[/yellow]")
         self._show_status()
         
         while True:
