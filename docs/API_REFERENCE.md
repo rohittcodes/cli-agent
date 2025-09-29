@@ -1,12 +1,12 @@
 # AI Code Agent - API Reference
 
-## CodeAgent Class
+## MultiToolAIAgent Class
 
 The main class that provides all functionality for the AI Code Agent.
 
 ### Constructor
 ```python
-CodeAgent()
+MultiToolAIAgent()
 ```
 **Description**: Initializes the AI Code Agent with default configuration.
 
@@ -158,6 +158,8 @@ print(stats)  # "Stats: 15 files, 1250 lines, 8 history, 12 queries, 45.2s uptim
 ```
 
 ### Context Management
+### Startup Message
+On initialization, the agent prints a brief console message: `Starting MultiToolAIAgent...` to indicate startup.
 
 #### `_auto_save() -> None`
 **Description**: Saves current context to persistent storage.

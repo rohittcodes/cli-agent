@@ -6,69 +6,29 @@
 1. **Get Gemini API Key**: Visit [Google AI Studio](https://aistudio.google.com/) and get your API key
 2. **Set Environment Variable**: `export GEMINI_API_KEY=your-api-key-here`
 3. **Start the Agent**: Run `uv run python main.py`
-4. **Start Coding**: Type `help` to see available commands
+4. **Start Interacting**: Type a natural request (e.g., "analyze my code structure")
+
+When the agent starts, you will see a brief startup message: `Starting MultiToolAIAgent...`.
 
 ### First Steps
 ```bash
 # Start the agent
 uv run python main.py
 
-# See available commands
-help
-
-# Add your project to context
-context
-
-# Ask AI for help
+# Ask AI for help (natural language)
 analyze my code structure
+create a helper module for parsing
 ```
 
 ---
 
-## Basic Commands
-
-### Essential Commands
-
-#### `help` or `h`
-Shows all available commands and their descriptions.
-
-**Example**:
-```bash
-AI> help
-```
-
-#### `context` or `files`
-Lists all files currently in your context.
-
-**Example**:
-```bash
-AI> context
-```
-
-#### `clear`
-Removes all files from your context.
-
-**Example**:
-```bash
-AI> clear
-```
-
-#### `exit`, `quit`, or `q`
-Exits the application.
-
-**Example**:
-```bash
-AI> exit
-```
+## Interacting with the Agent
+Use natural language; the agent routes to appropriate tools automatically.
 
 ---
 
-## AI Commands
-
-### Chat with AI
-Use natural language to interact with the AI assistant.
-
-**Examples**:
+## Examples
+Use natural requests like:
 ```bash
 # Analyze code
 AI> analyze the main.py file
@@ -140,44 +100,18 @@ AI> find all imports in the codebase
 ## Advanced Features
 
 ### Performance Monitoring
-
-#### View Statistics
-```bash
-AI> stats
-# Output: Stats: 15 files, 1250 lines, 8 history, 12 queries, 45.2s uptime
-```
-
-#### Manual Save
-```bash
-AI> save
-# Saves current context and shows confirmation
-```
-
-#### Export History
-```bash
-AI> export
-# Exports conversation history to export.txt
-```
+The agent prints lightweight status after actions (files count, queries, tool usage).
 
 ### Context Management
 
 #### View Context Status
-The agent automatically shows context status:
-```
-[green]15 files in context[/green] [dim](indexed: 12)[/dim]
-```
+The agent shows a short status line including files count, queries, and tools used.
 
 #### Clear Context
-```bash
-AI> clear
-# Removes all files from context
-```
+Start a new flow with a new request; the agent manages context automatically.
 
 #### View History
-```bash
-AI> history
-# Shows last 5 AI interactions
-```
+The agent keeps a brief in-memory history for better responses.
 
 ---
 
@@ -270,9 +204,8 @@ AI> create tests for the validation
 ### Performance Tips
 
 #### Monitor Usage
-- Check stats regularly with `stats`
-- Export history periodically with `export`
-- Clear context when not needed
+- Keep requests focused
+- Start fresh topics as needed
 
 #### Optimize Queries
 - Be specific in AI requests

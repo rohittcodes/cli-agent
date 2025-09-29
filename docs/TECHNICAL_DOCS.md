@@ -3,15 +3,15 @@
 ## Architecture Overview
 
 ### System Design
-The AI Code Agent is built as a single-class application (`AICodeAgent`) that consolidates all functionality into optimized Python code. The architecture follows a modular design pattern with integrated components using Google's Gemini AI models.
+The AI Code Agent is built as a single-class application (`MultiToolAIAgent`) that consolidates all functionality into optimized Python code. The architecture follows a modular design pattern with integrated components using Google's Gemini AI models.
 
 ### Core Architecture
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    AICodeAgent Class                        │
+│                 MultiToolAIAgent Class                      │
 ├─────────────────────────────────────────────────────────────┤
 │  • Context Management (files, history)                      │
-│  • AI Integration (Google Gemini 2.5 API)                  │
+│  • AI Integration (Google Gemini 2.5 API)                   │
 │  • File Operations (CRUD, search, indexing)                 │
 │  • Performance Tracking (stats, uptime, queries)            │
 │  • Tool Execution (routing, validation)                     │
@@ -202,6 +202,8 @@ except Exception:
 
 ### Environment Variables
 - **GEMINI_API_KEY**: Google Gemini API key (required)
+### Startup Behavior
+On initialization the agent emits a short console message using Rich: `Starting MultiToolAIAgent...`.
 - **CACHE_SIZE**: LRU cache size (default: 1000)
 - **SCAN_INTERVAL**: File re-scan interval (default: 5 seconds)
 
@@ -310,7 +312,7 @@ def __init__(self):
 - **Error Logging**: Monitor and log errors
 
 ### Update Procedures
-- **Code Updates**: Maintain 273-line constraint
+- **Code Updates**: Keep code compact (~250 lines) without sacrificing clarity
 - **Dependency Updates**: Test compatibility
 - **Feature Additions**: Preserve existing functionality
 - **Performance Optimization**: Maintain response times

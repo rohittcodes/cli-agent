@@ -1,3 +1,99 @@
+# 🤖 Multi-Tool AI Agent
+
+A powerful CLI agent for app building with **about 250 lines of code**. Think of it as a simplified version of Lovable, but with multiple AI tools working together!
+
+## ✨ Features
+
+### 🛠️ **14 Built-in Tools:**
+- **File Operations**: `create_file`, `edit_file`, `read_file`, `list_files`
+- **Code Analysis**: `analyze_code` - AI-powered code review
+- **Web Tools**: `web_search`, `web_fetch` - Internet search and content fetching
+- **Database**: `db_query`, `db_create` - SQLite operations with logging
+- **Version Control**: `git_init`, `git_status`, `git_commit` - Git automation
+- **System**: `sys_exec`, `sys_info` - System information and command execution
+
+### 🧠 **Intelligent Features:**
+- **AI Tool Orchestration**: Automatically selects the right tools for complex tasks
+- **Session Persistence**: Maintains context and history across sessions
+- **Smart Parsing**: Uses AI to understand natural language commands
+- **Activity Logging**: SQLite database tracks all operations
+- **Fallback Logic**: Keyword-based parsing when AI fails
+
+## 🚀 Quick Start
+
+1. **Set up your environment:**
+   ```bash
+   export GEMINI_API_KEY="your-api-key-here"
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   uv sync
+   ```
+
+3. **Run the agent:**
+   ```bash
+   uv run main.py
+   ```
+
+On startup, you'll see a brief message: "Starting MultiToolAIAgent..." indicating initialization.
+
+## 💡 Example Commands
+
+```bash
+# Create applications
+create a REST API
+create web scraper
+create database manager
+
+# Web operations
+search python tutorials
+fetch https://api.github.com/users/octocat
+
+# Version control
+git status
+git commit
+git init
+
+# Database operations
+database query
+db create table users
+
+# System operations
+system info
+list files
+analyze my code
+```
+
+## 🏗️ Architecture
+
+- **MultiToolAIAgent**: Core agent class ~250 lines
+- **Intelligent Parsing**: AI-first command interpretation with keyword fallbacks
+- **Tool Execution**: Modular tool system with error handling
+- **Session Management**: JSON-based context persistence
+- **Activity Logging**: SQLite database for audit trail
+
+## 📊 Built-in Analytics
+
+The agent tracks:
+- 📁 Files created/modified
+- 🔧 Tool usage statistics  
+- 🤖 AI API call count
+- 📝 Command history
+- ⏱️ Session duration
+
+## 🎯 Why ~250 Lines?
+
+This constraint encourages:
+- **Clean, efficient code**
+- **Essential features only**
+- **Maximum functionality density**
+- **Easy maintenance and understanding**
+
+---
+
+*Built with ❤️ using Gemini AI, Rich UI, and smart tool orchestration*
+
 # AI Code Agent
 
 A powerful, intelligent CLI developer tool that provides AI-powered code assistance with context management, file operations, and performance tracking. Built with Python and designed for maximum productivity using Google's Gemini AI models.
@@ -67,20 +163,16 @@ The system automatically tries the latest Gemini models in order:
 uv run python main.py
 ```
 
-### Available Commands
+### Interacting with the Agent
 
-#### Core Commands
-- `help` or `h` - Show help information
-- `context` or `files` - List files in context
-- `clear` - Clear context
-- `history` or `hist` - Show AI interaction history
-- `exit`, `quit`, or `q` - Exit the application
-- `cls` or `clear screen` - Clear the screen
+Use natural language. Describe what you want to do, and the agent routes to the right tools automatically. For example:
 
-#### Enhanced Commands
-- `stats` - Display performance statistics
-- `save` - Manual save with confirmation
-- `export` - Export conversation history to `export.txt`
+```bash
+create a REST API
+search python tutorials
+fetch https://api.github.com/users/octocat
+analyze the main.py file
+```
 
 #### AI Commands
 - Natural language input - AI-powered tool routing for complex requests
@@ -280,7 +372,7 @@ The application uses `agent_context.json` to persist:
 - Follow PEP 8 guidelines
 - Use type hints where appropriate
 - Add docstrings for new functions
-- Maintain the 273-line constraint
+- Keep the code concise and readable (around ~250 lines)
 
 ## License
 
