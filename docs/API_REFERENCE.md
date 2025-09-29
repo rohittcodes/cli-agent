@@ -11,12 +11,17 @@ MultiToolAIAgent()
 **Description**: Initializes the AI Code Agent with default configuration.
 
 **Attributes**:
-- `url`: Ollama API endpoint (default: "http://localhost:11434")
-- `response_cache`: Dictionary for caching AI responses
-- `file_index`: Dictionary mapping file paths to modification times
-- `content_index`: Dictionary mapping words to sets of file paths
 - `context`: Dictionary containing files and history
-- `performance_stats`: Dictionary with performance metrics
+- `stats`: Dictionary with performance metrics
+- `tools`: List of supported tool names
+
+### Supported Tools
+- `create_file`, `edit_file`, `read_file`, `list_files`
+- `analyze_code`
+- `web_search`, `web_fetch`
+- `db_query`, `db_create`
+- `git_init`, `git_status`, `git_commit`
+- `sys_exec`, `sys_info`
 
 ---
 

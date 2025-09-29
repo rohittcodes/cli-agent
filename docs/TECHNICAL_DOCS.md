@@ -11,7 +11,7 @@ The AI Code Agent is built as a single-class application (`MultiToolAIAgent`) th
 │                 MultiToolAIAgent Class                      │
 ├─────────────────────────────────────────────────────────────┤
 │  • Context Management (files, history)                      │
-│  • AI Integration (Google Gemini 2.5 API)                   │
+│  • AI Integration (Gemini 2.0 Flash API)                    │
 │  • File Operations (CRUD, search, indexing)                 │
 │  • Performance Tracking (stats, uptime, queries)            │
 │  • Tool Execution (routing, validation)                     │
@@ -227,25 +227,8 @@ def __init__(self):
         self.context = {'files': [], 'history': []}
 ```
 
-## Testing Architecture
-
-### Test Categories
-1. **Unit Tests**: Individual method testing
-2. **Integration Tests**: End-to-end workflows
-3. **Performance Tests**: Load and stress testing
-4. **Error Tests**: Exception handling validation
-
-### Test Isolation
-- **Temporary Files**: Each test uses isolated temp files
-- **Context Isolation**: Separate context files per test
-- **Cleanup**: Automatic cleanup of test artifacts
-- **Mocking**: AI and file system mocking
-
-### Test Coverage
-- **Code Coverage**: 100% method coverage
-- **Branch Coverage**: All conditional paths tested
-- **Error Coverage**: All exception paths tested
-- **Integration Coverage**: All user workflows tested
+## Testing
+Tests are currently not included.
 
 ## Performance Metrics
 

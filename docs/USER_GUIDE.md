@@ -41,6 +41,14 @@ AI> search for all functions that start with 'def'
 
 # Get help with debugging
 AI> help me debug this error in my code
+AI> list all files in the project
+AI> create a simple weather app in Python
+AI> read the weather_api.py and explain it
+AI> edit the weather app to add error handling
+AI> query the database for recent operations
+AI> analyze the code in the weather app
+AI> search for python best practices
+AI> show system information
 ```
 
 ### AI Capabilities

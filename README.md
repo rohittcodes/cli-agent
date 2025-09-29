@@ -147,20 +147,15 @@ A powerful, intelligent CLI developer tool that provides AI-powered code assista
    export GEMINI_API_KEY=your-api-key-here
    ```
 
-## AI Model Support
+## AI Model
 
-The system automatically tries the latest Gemini models in order:
-- **Primary**: `gemini-2.5-flash` (fastest, most efficient)
-- **Secondary**: `gemini-2.5-pro` (most advanced reasoning)
-- **Tertiary**: `gemini-2.0-flash` (stable 2.0 version)
-- **Fallback**: `gemini-1.5-pro` (proven stable)
-- **Legacy**: `gemini-1.0-pro` (compatibility)
+Uses `gemini-2.0-flash`.
 
 ## Usage
 
 ### Basic Usage
 ```bash
-uv run python main.py
+uv run main.py
 ```
 
 ### Interacting with the Agent
@@ -172,6 +167,14 @@ create a REST API
 search python tutorials
 fetch https://api.github.com/users/octocat
 analyze the main.py file
+list all files in the project
+create a simple weather app in Python
+read the weather_api.py and explain it
+edit the weather app to add error handling
+query the database for recent operations
+analyze the code in the weather app
+search for python best practices
+show system information
 ```
 
 #### AI Commands
@@ -233,31 +236,7 @@ The main class that handles all functionality:
 - **File Index**: Fast content search with word indexing
 
 ## Testing
-
-### Test Suite
-The application includes comprehensive test coverage:
-
-```bash
-# Run all tests
-uv run python -m pytest tests/ -v
-
-# Run specific test categories
-uv run python -m pytest tests/test_file_operations.py -v
-uv run python -m pytest tests/test_context_management.py -v
-
-# Run with coverage
-uv run python tests/test_runner.py coverage
-```
-
-### Test Categories
-1. **File Operations** (`test_file_operations.py`) - File management and operations
-2. **Context Management** (`test_context_management.py`) - Context persistence and commands
-
-### Test Cleanup
-All tests include proper cleanup to prevent file leaks:
-- Temporary files are automatically cleaned up
-- Context files are isolated per test
-- Export files are removed after testing
+Tests are currently not included.
 
 ## Performance Features
 
@@ -272,10 +251,7 @@ All tests include proper cleanup to prevent file leaks:
 - **File Processing**: Monitor indexed files and content
 
 ### Statistics Display
-```bash
-stats
-# Output: Stats: 15 files, 1250 lines, 8 history, 12 queries, 45.2s uptime
-```
+Inline status is shown after actions (files, queries, tools).
 
 ## Configuration
 
@@ -286,7 +262,7 @@ The application uses `agent_context.json` to persist:
 - Performance statistics
 
 ### AI Configuration
-- **Model**: Google Gemini Pro (cloud-based)
+- **Model**: gemini-2.0-flash
 - **API Key**: GEMINI_API_KEY environment variable
 - **Provider**: Google AI Studio
 
